@@ -15,16 +15,32 @@ if (empty($image)) foreach (glob('hat/*.jpg') as $key=>$filename) $image[$key]=$
     $(function() {
 		//do some math
 		var totalimages=<?=count($image)?>;
-		var increment=($( window ).width()/totalimages);
-
+		var xwidth=$( window ).width();
+		var increment=(xwidth/totalimages);
+		var counter=0;
+//event.changedTouches[0].clientX
       //Enable swiping...
       $("#image_container").swipe( {
-		swipeStatus:function(event) {
-			percent=event.changedTouches[0].clientX/$( window ).width();
-			imgnum=Math.round(totalimages*percent);
-			if (imgnum<0) imgnum=0;
-			if (imgnum>=totalimages) imgnum=totalimages-1;
-			$(".images").hide();
+		
+	  //including all possible return values
+		swipeStatus:function(event, phase, direction, distance, duration, fingers, fingerData, currentDirection) {
+			val = event.target.id;
+			current_imgnum = parseInt(val.substr(val.indexOf("_") + 1));
+			if (direction=="right"){
+				counter=counter+increment;
+				if (counter>=(increment*(totalimages-1))) counter=0;
+				imgnum=Math.round(counter/increment);
+				
+			}
+			else if (direction=="left"){
+				counter=counter-increment;
+				if (counter<=0) counter=(totalimages-1)*increment;
+				imgnum=Math.round(counter/increment);
+			}
+			else imgnum=current_imgnum;
+
+			//the delay makes it less crazy, will try on touchscreen
+			$(".images").delay(100).hide();
 			$("#img_"+imgnum).show();
         },
 
