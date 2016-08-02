@@ -39,8 +39,8 @@ if (empty($image)) foreach (glob('hat/*.jpg') as $key=>$filename) $image[$key]=$
 			}
 			else imgnum=current_imgnum;
 
-			//the delay makes it less crazy, will try on touchscreen
-			$(".images").delay(100).hide();
+			//a small delay might help, nothing now
+			$(".images").delay(0).hide();
 			$("#img_"+imgnum).show();
         },
 
